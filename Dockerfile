@@ -3,16 +3,12 @@ FROM python:3.5-slim-jessie
 RUN apt-get update -y && \
     apt-get install -y python-pip python-dev
 
-# We copy just the requirements.txt first to leverage Docker cache
-COPY ./requirements.txt /app/requirements.txt
-
-WORKDIR /app
+COPY ./requirements.txt .
 
 RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
 
-COPY . /app
+WORKDIR /src
 
-ENTRYPOINT [ "python" ]
+ENTRYPOINT ./run_gunicorn.sh
 
-CMD [ "app.py" ]
